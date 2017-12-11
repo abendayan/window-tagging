@@ -43,7 +43,7 @@ if __name__ == '__main__':
         file_values = tagger_test.learn(tagger_training, False, True)
         print  "finish test epoch " + str(epoch) + " took " + str(tagg.passed_time(previous_time)) + "s"
         previous_time = time.time()
-        file_write = open(folder + '/test2.' + folder , 'w')
+        file_write = open(folder + '/test3.' + folder , 'w')
         file_write.write('\n'.join(file_values))
         file_write.close()
         print  "finish writing on file after epoch " + str(epoch) + " took " + str(tagg.passed_time(previous_time)) + "s"

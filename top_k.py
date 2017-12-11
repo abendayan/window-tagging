@@ -30,21 +30,34 @@ class TopK:
                             break
         vec_similars_words = []
         for vec in vec_similars:
-            vec_similars_words.append(self.vocab[vec[0]])
+            vec_similars_words.append((self.vocab[vec[0]], vec[1]))
         return vec_similars_words
 
+def print_tupple(tupples):
+    for tupple in tupples:
+        print tupple[0], tupple[1]
 
 if __name__ == '__main__':
     vector_file = sys.argv[1]
     vocab_file = sys.argv[2]
     top_k = TopK(vector_file, vocab_file)
     print "dog: "
-    print top_k.most_similar("dog", 5)
+    print "word ;   similarity:"
+    words_similars = top_k.most_similar("dog", 5)
+    print_tupple(words_similars)
     print "england: "
-    print top_k.most_similar("england", 5)
+    print "word ;   similarity:"
+    words_similars = top_k.most_similar("england", 5)
+    print_tupple(words_similars)
     print "john: "
-    print top_k.most_similar("john", 5)
+    print "word ;   similarity:"
+    words_similars = top_k.most_similar("john", 5)
+    print_tupple(words_similars)
     print "explode: "
-    print top_k.most_similar("explode", 5)
+    print "word ;   similarity:"
+    words_similars = top_k.most_similar("explode", 5)
+    print_tupple(words_similars)
     print "office: "
-    print top_k.most_similar("office", 5)
+    print "word ;   similarity:"
+    words_similars = top_k.most_similar("office", 5)
+    print_tupple(words_similars)

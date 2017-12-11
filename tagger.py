@@ -25,19 +25,19 @@ def passed_time(previous_time):
     return round(time.time() - previous_time, 3)
 
 def save_iter_in_graph(folder, data, add_to_name):
-    files = {
+    graphes = {
         "test"+add_to_name+".accuracy_train": 0,
         "test"+add_to_name+".loss_train": 1,
         "test"+add_to_name+".accuracy_dev": 2,
         "test"+add_to_name+".loss_dev": 3
     }
 
-    for file, i in files.items():
+    for graph, i in graphes.items():
         plt.figure(i)
         plt.plot(range(len(data)), [a[i] for a in data])
         plt.xlabel('Epochs')
-        plt.ylabel(file)
-        plt.savefig(folder + '/' + file + '.png')
+        plt.ylabel(graph)
+        plt.savefig(folder + '/' + graph + '.png')
 
 
 class Net(nn.Module):
@@ -200,25 +200,17 @@ class Tagger:
         correct = 0
         total_loss = torch.Tensor([0])
         file_values = []
-        for i, (b_x, b_y) in enumerate(self.train_loader):
-            # Step 1. Prepare the inputs to be passed to the model (i.e, turn the words
-            # into integer indices and wrap them in variables)
 
+        for i, (b_x, b_y) in enumerate(self.train_loader):
             batch_x = autograd.Variable(b_x)
             batch_y = autograd.Variable(b_y)
             tags_window = b_y.numpy()
             words_window = b_x.numpy()
-
-            # Step 2. Recall that torch *accumulates* gradients. Before passing in a
-            # new instance, you need to zero out the gradients from the old
-            # instance
             model.zero_grad()
 
-            # Step 3. Run the forward pass, getting log probabilities over next words
             forward = model(batch_x)
 
             prediction = torch.max(forward, -1)[1]
-            # print prediction
             checked += BATCH_SIZE
             if is_test:
                 for j, y in enumerate(map(int, prediction[:BATCH_SIZE])):
@@ -232,6 +224,7 @@ class Tagger:
                         if window[-index_middle:] == ["</s>", "</s>"]:
                             file_values.append('')
             else:
+                checked -= len([1 for i, y in enumerate(map(int, prediction)) if (y == tags_window[i]) and train_tagger.tags_list[y] == 'O'])
                 correct += len([1 for i, y in enumerate(map(int, prediction)) if (y == tags_window[i]) and train_tagger.tags_list[y] != 'O'])
 
             # compute the loss function
